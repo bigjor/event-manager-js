@@ -1,0 +1,73 @@
+:root {
+    --selected: #1F92F2;
+    --selectedText: #fff;
+    --current: #333;
+    --currentText: #fff;
+    --numberWidth: 20px;
+
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.calendar {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+}
+
+.calendar .item-day {
+    /* display: inline-block; */
+    width: calc(100% / 7);
+    height: calc(100vh / 6);
+    max-height: calc(100vh / 6);
+    text-align: center;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+/* .calendar .item-day .number {
+    padding: .5em 0;
+    height: var(--numberWidth);
+} */
+
+.controller {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0 1em;
+    height: 50px;
+}
+
+.calendar .item-day .selected, .calendar .item-day .current, .calendar .item-day .number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: .5em auto;
+    padding: .2em;
+    width: var(--numberWidth);
+    height: var(--numberWidth);
+    border-radius: 100px;
+}
+
+.calendar .item-day .selected {
+    color: var(--selectedText);
+    background: var(--selected);
+}
+
+.calendar .item-day .current {
+    color: var(--currentText);
+    background: var(--current);
+}
+
+.calendar .item-day .event {
+    background: coral;
+    padding: .2em;
+    overflow:hidden;
+    text-overflow: ellipsis;
+    border-radius: 4px;
+    color: #fff;
+}
