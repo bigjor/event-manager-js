@@ -16,10 +16,10 @@ const localAppBD = {
     /*                              DB: EVENTMANAGER                              */
     /* -------------------------------------------------------------------------- */
     reqEventManagerApp: undefined,
-    init: async function() {
+    init: function() {
         if (this.reqEventManagerApp) return
 
-        console.log('localdb | init')
+        window.log('localdb | init'.toUpperCase(), 'gray')
 
         let emit = document.createEvent('Event')
         emit.initEvent('onMountedDB', true, true);
@@ -27,15 +27,15 @@ const localAppBD = {
         this.reqEventManagerApp = indexedDB.open('App', VERSION)
 
         this.reqEventManagerApp.onerror = function(event) {
-            console.log('reqEventManagerApp | Error db!! | ' + event)
+            window.log('reqEventManagerApp | Error db!! | '.toUpperCase() + event, 'red')
         }
         this.reqEventManagerApp.onsuccess = function(event) {
             this.db = this.result
             document.dispatchEvent(emit);
-            console.log('reqEventManagerApp | dbopen | ' + this.db)
+            window.log('reqEventManagerApp | dbopen | '.toUpperCase() + this.db, 'green')
         }
         this.reqEventManagerApp.onupgradeneeded = function(event) {
-            console.log('reqEventManagerApp | onupgradeneeded | ' + event)
+            window.log('reqEventManagerApp | onupgradeneeded | ' + event, 'blue')
             for (let table of Object.values(TABLES)) {
                 event.currentTarget.result.createObjectStore(table.name, {
                     keyPath: 'id',

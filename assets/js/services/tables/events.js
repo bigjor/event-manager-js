@@ -27,7 +27,7 @@ const table_events = {
       if (nokfn) nokfn(event)
     }
     requestUpdate.onsuccess = function(event) {
-      console.log('createEvent | ' + event)
+      window.log('createEvent | ' + event, 'green')
       if (okfn) okfn()
     }
   },
@@ -39,15 +39,13 @@ const table_events = {
     for (let event of events) {
       let obj = event
 
-      console.log(obj)
-
       let requestUpdate = store.put(obj)
 
       requestUpdate.onerror = function(event) {
         if (nokfn) nokfn(event)
       }
       requestUpdate.onsuccess = function(event) {
-        console.log('createEvent | ' + event)
+        window.log('createEvent | ' + event, 'green')
         if (okfn) okfn()
       }
     }
@@ -67,7 +65,7 @@ const table_events = {
       if (nokfn) nokfn(event)
     }
     this.onsuccess = function(event) {
-      console.log('getEventAll | ' + event)
+      window.log('getEventAll | ' + event, 'green')
       if (okfn) okfn()
     }
     return store.getAllKeys()
@@ -80,7 +78,7 @@ const table_events = {
       if (nokfn) nokfn(event)
     }
     this.onsuccess = function(event) {
-      console.log('getEventAllObject | ' + event)
+      window.log('getEventAllObject | ' + event, 'green')
       if (okfn) okfn()
     }
     return store.getAll()
