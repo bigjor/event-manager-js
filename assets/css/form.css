@@ -43,7 +43,7 @@ input, select, textarea {
     /* color: #ffffff; */
 }
 
-input[type=date], input[type=text], textarea {
+input[type=date], input[type=text], input[type=password], textarea {
     width: calc(var(--formWidth) - 22px) !important;
 }
 
@@ -52,17 +52,11 @@ input:focus {
     transition: all 0.2s ease-in;
 }
 
-/* button {
-    padding: 13px 96px 15px 96px;
-    margin-top: 10px;
-    background-color: #7db1;
-    color: #ffffff;
-    font-weight: 800;
-    border: 5px solid transparent;
-    border-radius: 3px;
+#login-page-errors {
+    margin-bottom: .6em;
 }
 
-button:hover {
-    border-bottom: 4px solid #7db1;
-    transition: all 0.3s ease-in;
-} */
+.error {
+    color: #cc0000;
+    font-size: small;
+}

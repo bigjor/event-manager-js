@@ -4,7 +4,6 @@ class API {
         this.headers = headers
         this.request = new XMLHttpRequest()
         this.request.withCredentials = withCredentials || false
-        // TODO:   
     }
 
     create(opts) {
@@ -17,6 +16,9 @@ class API {
 
     post(path = '', body = null) {
         this.request.open('POST', `${this.baseURL}${path}`, true); 
+        for (const header in this.headers) {
+            this.request.setRequestHeader(header, this.headers[header])    
+        }
         let promise = new Promise((resolve, reject) => {
             this.request.onreadystatechange = function (event) {
                 if (event.target.readyState == 4) 
@@ -33,6 +35,9 @@ class API {
 
     get(path = '', body = null) {
         this.request.open('GET', `${this.baseURL}${path}`, true); 
+        for (const header in this.headers) {
+            this.request.setRequestHeader(header, this.headers[header])    
+        }
         let promise = new Promise((resolve, reject) => {
             this.request.onreadystatechange = function (event) {
                 if (event.target.readyState == 4) 

@@ -5,8 +5,7 @@ const BASE = 'https://api.themoviedb.org/3'
 const PATH = `/movie/popular?api_key=${TOKEN}&language=es-ES&page=1`
 
 export function apiTestExec() {
-    let opts = { baseURL: BASE }
-    let testAPI = api.create(opts)
+    let testAPI = api.create({ baseURL: BASE })
     testAPI.get(PATH)
         .then(result => window.log('API TEST: PASSED', 'green'))
         .catch(result => window.log('API TEST: FAILED', 'red'))

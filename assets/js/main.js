@@ -3,12 +3,17 @@ import calendar from './modules/calendar.js'
 
 // SERVICES
 import localdb from './services/localdb.js'
+import api from './services/api/API.js'
+
+// UTILS
+import { getParam, setCookie, getCookie } from './utils/utils.js'
 
 // TESTS
 import { apiTestExec } from './test/TestAPI.js'
 
 (function() {
-    'use strict'
+    'use strict';
+
     // GENERAL VARS
     window.test = arguments[1].test || false
     window.production = arguments[1].production || false
@@ -33,21 +38,6 @@ import { apiTestExec } from './test/TestAPI.js'
         }, 200)
     }
 
-    function getParam(param) {
-        let result = null, entry = []
-        location.search
-            .substr(1)
-            .split("&")
-            .forEach(function (item) {
-                entry = item.split("=")
-                if (entry[0] == param) 
-                    result = decodeURIComponent(entry[1])
-                
-            })
-        return result
-    }
-
-
     /* -------------------------------------------------------------------------- */
     /*                                 INICIO APP                                 */
     /* -------------------------------------------------------------------------- */
@@ -67,13 +57,76 @@ import { apiTestExec } from './test/TestAPI.js'
         window.localdb = localdb
 
         /* ---------------------------------- PAGES --------------------------------- */
+        let loginPage = document.getElementById('login-page')
+        let loginPageErrors = document.getElementById('login-page-errors')
+
         let calendarPage = document.getElementById('calendar-page')
         let eventManagerPage = document.getElementById('event-manager-page')
+
+        /* ----------------------------- LOGIN & SESSION ---------------------------- */
+        loginPage.style.display = 'block'
+
+        let userInput = document.getElementsByName('user')[0]
+        let passInput = document.getElementsByName('pass')[0]
+
+        let btnLogin = document.getElementById('btnLogin')
+        btnLogin.addEventListener('click', async function(event) {
+            async function check() {
+                let errors = []
+                if (userInput.value.length < 1) {
+                    errors.push('El usuario no debe estar vacío')
+                }
+                    
+                if (passInput.value.length < 1) {
+                    errors.push('La contraseña no debe estar vacía')
+                    return errors
+                }
+
+                let API = api.create({ 
+                    baseURL: 'http://localhost:3000',
+                    headers: {
+                        'Access-Control-Allow-Origin': '*',
+                        'Content-Type': 'application/json',
+                        'Accept': '*/*'
+                    }
+                })
+                let result = await API.post('/login', JSON.stringify({ user: userInput.value, pass: passInput.value}))
+            
+                if (!JSON.parse(result).logged) errors.push('Usuario o contraseña incorrectas')
+              
+        
+                return errors
+            
+                
+            }
+
+            function drawErrors(errors = [], target) {
+                if (!target) return
+                console.log(errors)
+                errors.forEach(error => {
+                    let div = document.createElement('div')
+                    div.className = 'error'
+                    div.appendChild(document.createTextNode(error))
+                    target.appendChild(div)
+                })
+            }
+            
+            loginPageErrors.innerHTML = ''
+            event.preventDefault()
+            let errors = await check()
+            if (errors.length == 0) 
+                document.pageTransition(loginPage, calendarPage)
+            else
+                drawErrors(errors, loginPageErrors)
+        })
+
+
 
         /* -------------------------------- CALENDAR -------------------------------- */
         let calendarHtml = document.getElementById('calendar')
         let dateText = document.getElementById('dateText')
         
+
         if (getParam('date')) 
             dateText.innerText = calendar.dateToString(calendar.setSelected(getParam('date')), '/')
         else
@@ -81,7 +134,6 @@ import { apiTestExec } from './test/TestAPI.js'
         
         calendar.setTarget(calendarHtml)
         calendar.draw(calendarHtml)
-        calendarPage.style.display = 'block'
         
 
         let btnPrev = document.getElementById('btnPrev')

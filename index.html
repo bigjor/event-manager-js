@@ -9,7 +9,27 @@
 </head>
 <body>
     <div id="wrapper">
-        <div class="aside"></div>
+        <div id="login-page" class="page">
+            <div id="align">
+                <form id="login-form" enctype="multipart/form-data">
+                    <div class="form-wrapper">
+                        <div class="form-title">
+                            <h2 class="text-center">Login</h2>
+                        </div>
+                        <div id="login-page-errors"></div>
+
+                        <label>Username</label>
+                        <input type="text" name="user">
+
+                        <label>Password</label>
+                        <input type="password" name="pass">
+                
+                        <input id="btnLogin" class="btn btn-info" type="submit" value="Entrar" />
+                    </div>
+                </form>
+            </div>
+        </div>
+        </div>
         <div id="calendar-page" class="page">
             <div class="controller">
                 <div id="btnPrev" class="icon chevron-left"></div>
