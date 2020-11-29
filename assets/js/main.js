@@ -85,13 +85,20 @@ window.addEventListener('DOMContentLoaded', function() {
         let description = document.getElementsByName('description')[0].value
         let color = document.getElementsByName('color')[0].value
         let date = document.getElementsByName('date')[0].value
-        let dateObj = new Date()
         
+        
+        let year = 0
+        let month = 0
+        let day = 0
+
         date.split('-').forEach((item, index) => {
-            if (index == 0) dateObj.setFullYear(parseInt(item))
-            if (index == 1) dateObj.setMonth(parseInt(item))
-            if (index == 2) dateObj.setDate(parseInt(item))
+            if (index == 0) year = parseInt(item)
+            if (index == 1) month = parseInt(item)
+            if (index == 2) day = parseInt(item)
         })
+        
+        
+        let dateObj = new Date(year, month - 1, day)
         
         let eventObj = {
             title,

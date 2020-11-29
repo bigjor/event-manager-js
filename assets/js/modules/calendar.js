@@ -59,6 +59,7 @@ function draw(element = undefined) {
 
         for(let ev of events) {
             if (!isSameDate(date, ev.object.date)) continue;
+            window.log(date + ", " + ev.object.date)
             let divEvent = document.createElement('div')
             divEvent.className = 'event'
             divEvent.style.background = ev.object.color
@@ -169,6 +170,7 @@ document.addEventListener('onMountedDB', function() {
 })
 
 function addEvent(event) {
+    console.log(event.date)
     event.color = (event.color == 'random') ? randomColor() : event.color 
     localdb.createEvent(uuidv4(), event)
     updateEvents()
