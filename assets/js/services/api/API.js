@@ -29,7 +29,7 @@ class API {
                 reject(event)
             }
         })
-        this.request.send(body); 
+        this.request.send(body)
         return promise
     }
 

@@ -151,8 +151,11 @@ class Calendar {
     }
 
     addEvent(event) {
-        event.color = (event.color == 'random') ? this.randomColor() : event.color 
-        let newEvent = new CustomItemEvent().from(event)
+        let { title, description, date, color } = event
+
+        color = color == 'random' ? this.randomColor() : color 
+        
+        let newEvent = new CustomItemEvent(title, description, date, color)
         
         window.localdb.createEvent(this.uuidv4(), event)
         this.updateEvents()

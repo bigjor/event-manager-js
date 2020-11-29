@@ -111,10 +111,27 @@
     background: url('../img/chevron_right.png') no-repeat center center;
 }
 
+.icon.delete {
+    background: url('../img/delete.png') no-repeat center center;
+}
+
+.icon.xs {
+    width: 18px;
+    height: 18px;
+}
+
+.icon.md {
+    width: 24px;
+    height: 24px;
+}
+
 /* -------------------------------------------------------------------------- */
 /*                                   BUTTONS                                  */
 /* -------------------------------------------------------------------------- */
 .btn {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
     padding: .6em;
     border-radius: 5px;
     color: #fff;
@@ -136,4 +153,8 @@
 
 .btn-success {
     background: var(--success);
+}
+
+.fix-width {
+    width: 120px;
 }

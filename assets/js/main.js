@@ -6,7 +6,7 @@ import localdb from './services/localdb.js'
 import api from './services/api/API.js'
 
 // UTILS
-import { getParam, setCookie, getCookie } from './utils/utils.js'
+import { getParam, setCookie, getCookie, deleteCookie } from './utils/utils.js'
 
 // TESTS
 import { apiTestExec } from './test/TestAPI.js'
@@ -42,9 +42,9 @@ import { apiTestExec } from './test/TestAPI.js'
     /*                                 INICIO APP                                 */
     /* -------------------------------------------------------------------------- */
     window.addEventListener('DOMContentLoaded', function() {
-        
         window.log(window.name || 'UNNAMED', 'orange', '.2em .6em', true)
         window.log('DOM LOADED', 'gray')
+
 
         /* ------------------------------- TESTS EXEC ------------------------------- */
         if (test) {
@@ -64,7 +64,10 @@ import { apiTestExec } from './test/TestAPI.js'
         let eventManagerPage = document.getElementById('event-manager-page')
 
         /* ----------------------------- LOGIN & SESSION ---------------------------- */
-        loginPage.style.display = 'block'
+        if (getCookie('user')) 
+            calendarPage.style.display = 'block'
+        else
+            loginPage.style.display = 'block'
 
         let userInput = document.getElementsByName('user')[0]
         let passInput = document.getElementsByName('pass')[0]
@@ -91,13 +94,9 @@ import { apiTestExec } from './test/TestAPI.js'
                     }
                 })
                 let result = await API.post('/login', JSON.stringify({ user: userInput.value, pass: passInput.value}))
-            
+                console.log(result)
                 if (!JSON.parse(result).logged) errors.push('Usuario o contraseña incorrectas')
-              
-        
-                return errors
-            
-                
+                return errors  
             }
 
             function drawErrors(errors = [], target) {
@@ -114,10 +113,12 @@ import { apiTestExec } from './test/TestAPI.js'
             loginPageErrors.innerHTML = ''
             event.preventDefault()
             let errors = await check()
-            if (errors.length == 0) 
+            if (errors.length == 0) {
+                setCookie('user', userInput.value, 1)
                 document.pageTransition(loginPage, calendarPage)
-            else
+            } else {
                 drawErrors(errors, loginPageErrors)
+            }
         })
 
 
@@ -149,6 +150,12 @@ import { apiTestExec } from './test/TestAPI.js'
         let btnNew = document.getElementById('btnNew')
         btnNew.addEventListener('click', function() {
             document.pageTransition(calendarPage, eventManagerPage)
+        })
+
+        let btnExit = document.getElementById('btnExit')
+        btnExit.addEventListener('click', function() {
+            deleteCookie('user')
+            document.pageTransition(calendarPage, loginPage)
         })
 
         /* ------------------------------ EVENT MANAGER ----------------------------- */
