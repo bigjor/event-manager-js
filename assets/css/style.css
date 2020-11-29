@@ -1,10 +1,19 @@
+/* -------------------------------------------------------------------------- */
+/*                                   GENERAL                                  */
+/* -------------------------------------------------------------------------- */
+@import './form.css';
+
 :root {
     --selected: #1F92F2;
     --selectedText: #fff;
     --current: #333;
     --currentText: #fff;
     --numberWidth: 20px;
-
+    --controllerHeight: 50px;
+    --info: #1F92F2;
+    --warn: #FFC107;
+    --error: #FF5252;
+    --success: #4CAF50;
 }
 
 * {
@@ -13,6 +22,19 @@
     font-family: Arial, Helvetica, sans-serif;
 }
 
+.page {
+    display: none;
+    transition: .2s opacity;
+}
+
+.text-center {
+    text-align: center;
+}
+
+
+/* -------------------------------------------------------------------------- */
+/*                                  CALENDAR                                  */
+/* -------------------------------------------------------------------------- */
 .calendar {
     display: flex;
     flex-wrap: wrap;
@@ -22,24 +44,19 @@
 .calendar .item-day {
     /* display: inline-block; */
     width: calc(100% / 7);
-    height: calc(100vh / 6);
+    height: calc((100vh - var(--controllerHeight)) / 6);
     max-height: calc(100vh / 6);
     text-align: center;
     cursor: pointer;
     overflow: hidden;
 }
 
-/* .calendar .item-day .number {
-    padding: .5em 0;
-    height: var(--numberWidth);
-} */
-
 .controller {
     display: flex;
     align-items: center;
     justify-content: space-around;
     padding: 0 1em;
-    height: 50px;
+    height: var(--controllerHeight);
 }
 
 .calendar .item-day .selected, .calendar .item-day .current, .calendar .item-day .number {
@@ -65,9 +82,58 @@
 
 .calendar .item-day .event {
     background: coral;
-    padding: .2em;
-    overflow:hidden;
+    max-height: 20px;
+    padding: .2em .6em;
+    margin: .2em;
+    overflow: hidden;
     text-overflow: ellipsis;
     border-radius: 4px;
     color: #fff;
+    font-size: .7em;
+    text-align: left;
+}
+
+
+/* -------------------------------------------------------------------------- */
+/*                                    ICONS                                   */
+/* -------------------------------------------------------------------------- */
+.icon {
+    background-size: contain !important;
+    width: 40px;
+    height: 40px;
+}
+
+.icon.chevron-left {
+    background: url('../img/chevron_left.png') no-repeat center center;
+}
+
+.icon.chevron-right {
+    background: url('../img/chevron_right.png') no-repeat center center;
+}
+
+/* -------------------------------------------------------------------------- */
+/*                                   BUTTONS                                  */
+/* -------------------------------------------------------------------------- */
+.btn {
+    padding: .6em;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
+    box-shadow: 1px 1px 2px #aaa;
+}
+
+.btn-info {
+    background: var(--info);
+}
+
+.btn-warn {
+    background: var(--warn);
+}
+
+.btn-error {
+    background: var(--error);
+}
+
+.btn-success {
+    background: var(--success);
 }

@@ -1,0 +1,68 @@
+:root {
+    --formWidth: 280px;
+}
+
+body {
+    /* background-color: #292626; */
+    font-family: 'Sen', sans-serif;
+    /* color: #eeeeee; */
+}
+
+#align {
+    display: block;
+    margin: 5% auto;
+    width: var(--formWidth);
+}
+
+form {
+    display: block;
+    width: var(--formWidth);
+    font-weight: 600;
+}
+
+.form-title {
+    margin-bottom: 2em;
+}
+
+label {
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+}
+
+input, select, textarea {
+    /* background-color: #4a4646; */
+    border: 1px solid #4a4646;
+    border-bottom: 2px solid #4a4646;
+    border-radius: 3px;
+    width: 100%;
+    padding: 13px 10px;
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    /* color: #ffffff; */
+}
+
+input[type=date], input[type=text], textarea {
+    width: calc(var(--formWidth) - 22px) !important;
+}
+
+input:focus {
+    border-bottom: 2px solid #ffffff;
+    transition: all 0.2s ease-in;
+}
+
+/* button {
+    padding: 13px 96px 15px 96px;
+    margin-top: 10px;
+    background-color: #7db1;
+    color: #ffffff;
+    font-weight: 800;
+    border: 5px solid transparent;
+    border-radius: 3px;
+}
+
+button:hover {
+    border-bottom: 4px solid #7db1;
+    transition: all 0.3s ease-in;
+} */

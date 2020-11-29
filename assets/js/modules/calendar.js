@@ -2,13 +2,15 @@
 let target = undefined
 let current = new Date()
 let selected = current
+let events = []
 // METHODS
 function daysInMonth(month, year) {
     return new Date(year, month, 0).getDate();
 }
 
-function dayOfWeek(month, year) {
-    return new Date(month, year, 1).getDay();
+function firstDayOfWeek(month, year) {
+    let number = new Date(month, year, 1).getDay()
+    return number == 0 ? 7 : number - 1
 }
 
 function isSameDate(date, otherDate = undefined) {
@@ -28,11 +30,19 @@ function setTarget(element) {
     target = element
 }
 
+function newSpacer() {
+    let container = document.createElement('div')
+    container.className = 'item-day'
+    return container
+}
+
 function draw(element = undefined) {
     if (element) target = element
     target.innerHTML = ''
     let year = selected.getFullYear()
-    let month = selected.getMonth()
+    let month = selected.getMonth() + 1
+    
+    // DRAW DAY BOX
     for (let day = 1; day <= daysInMonth(month, year); day++) {
         let date = new Date(year, month - 1, day)
         let container = document.createElement('div')
@@ -47,15 +57,25 @@ function draw(element = undefined) {
         container.className = 'item-day'
         container.appendChild(number)
 
+        for(let ev of events) {
+            if (!isSameDate(date, ev.object.date)) continue;
+            let divEvent = document.createElement('div')
+            divEvent.className = 'event'
+            divEvent.style.background = ev.object.color
+            divEvent.innerText = ev.object.title
+            container.appendChild(divEvent)
+        }
+
         container.addEventListener('click', function() {
-            selected = new Date(year, month, day)
+            selected = new Date(year, month - 1, day)
             Object.values(container.parentElement.children).forEach(item => {
-                if (item.getAttribute('ref') == dateToString(date) && isSameDate(date))
-                    item.children[0].className = 'current'
-                else if (item.getAttribute('ref') == container.getAttribute('ref'))
-                    item.children[0].className = 'selected'
-                else
-                    item.children[0].className = 'number'
+                if (item.getAttribute('ref')) 
+                    if (item.getAttribute('ref') == dateToString(date) && isSameDate(date))
+                        item.children[0].className = 'current'
+                    else if (item.getAttribute('ref') == container.getAttribute('ref'))
+                        item.children[0].className = 'selected'
+                    else
+                        item.children[0].className = 'number'
             })
         })
 
@@ -67,9 +87,10 @@ function draw(element = undefined) {
 function nextMonth() {
     let currentMonth = selected.getMonth()
     let currentYear = selected.getFullYear()
+    // let currentDay = selected.getDate()
     let month = null
     let year = null
-
+    
     if (currentMonth == 11) {
         year = currentYear + 1
         month = 0
@@ -77,7 +98,8 @@ function nextMonth() {
         year = currentYear
         month = currentMonth + 1
     }
-
+    
+    // let days = daysInMonth(month, year)
     selected = new Date(year, month, 1)
     draw()
 
@@ -87,6 +109,7 @@ function nextMonth() {
 function prevMonth() {
     let currentMonth = selected.getMonth()
     let currentYear = selected.getFullYear()
+    // let currentDay = selected.getDate()
     let month = null
     let year = null
 
@@ -98,14 +121,61 @@ function prevMonth() {
         month = currentMonth - 1
     }
 
+    // let days = daysInMonth(month, year)
     selected = new Date(year, month, 1)
     draw()
 
     return selected
 }
 
+function uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+        let r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+        return v.toString(16);
+    });
+}
+
+function randomColor() {
+    return '#xxxxxx'.replace(/[x]/g, function(c) {
+        let r = Math.random() * 16 | 0, v = r;
+        return v.toString(16);
+    });
+}
+
+function updateEvents() {
+    let getEvents = localdb.getEventAllObject()
+    getEvents.onsuccess = () => {
+        events = getEvents.result
+        draw()
+    }
+}
+
+function setSelected(date) {
+    let dateObj = new Date()  
+    date.split('-').forEach((item, index) => {
+        if (index == 0) dateObj.setFullYear(parseInt(item))
+        if (index == 1) dateObj.setMonth(parseInt(item) - 1)
+        if (index == 2) dateObj.setDate(parseInt(item))
+    })
+    selected = dateObj
+    return selected
+}
+
+/* -------------------------------------------------------------------------- */
+/*                             ONMOUNTED DATABASE                             */
+/* -------------------------------------------------------------------------- */
+document.addEventListener('onMountedDB', function() {
+    updateEvents()
+})
+
+function addEvent(event) {
+    event.color = (event.color == 'random') ? randomColor() : event.color 
+    localdb.createEvent(uuidv4(), event)
+    updateEvents()
+}
+
 const calendar = {
-    dayOfWeek: (month, year) => dayOfWeek(month, year),
+    firstDayOfWeek: (month, year) => firstDayOfWeek(month, year),
     daysInMonth: (month, year) => daysInMonth(month, year),
     isSameDate: (date, otherDate) => isSameDate(date, otherDate),
     draw: element => draw(element),
@@ -113,6 +183,8 @@ const calendar = {
     prevMonth: () => prevMonth(),
     dateToString: (date, delimiter) => dateToString(date, delimiter),
     setTarget: element => setTarget(element),
+    addEvent: event => addEvent(event),
+    setSelected: date => setSelected(date),
     today: new Date(),
     selected: selected
 }

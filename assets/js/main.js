@@ -1,4 +1,5 @@
 import calendar from './modules/calendar.js'
+import localdb from './services/localdb.js'
 
 // GENERAL FUNCTIONS
 window.log = (text, ...args) => {
@@ -9,13 +10,57 @@ window.log = (text, ...args) => {
     console.log(`%c${text}`, opts)
 }
 
+document.pageTransition = (oldPage, newPage) => {
+    oldPage.style.opacity = 0
+    setTimeout(() => {
+        oldPage.style.display = 'none'
+        newPage.style.display = 'block'
+        newPage.style.opacity = 100
+    }, 200)
+}
+
+function getParam(param) {
+    let result = null, entry = []
+    location.search
+        .substr(1)
+        .split("&")
+        .forEach(function (item) {
+            entry = item.split("=")
+            if (entry[0] == param) 
+                result = decodeURIComponent(entry[1])
+            
+        })
+    return result
+}
+
+
+/* -------------------------------------------------------------------------- */
+/*                                 INICIO APP                                 */
+/* -------------------------------------------------------------------------- */
 window.addEventListener('DOMContentLoaded', function() {
+    window.log('EVENTS APP | JORDAN', 'orange', '.2em .6em')
+    
     console.log("DOM LOADED")
     
+    /* ----------------------------- INICIO LOCALDB ----------------------------- */
+    localdb.init()
+    window.localdb = localdb
+
+    /* ---------------------------------- PAGES --------------------------------- */
+    let calendarPage = document.getElementById('calendar-page')
+    let eventManagerPage = document.getElementById('event-manager-page')
+
+    /* -------------------------------- CALENDAR -------------------------------- */
     let calendarHtml = document.getElementById('calendar')
-    calendar.draw(calendarHtml)
-    
     let dateText = document.getElementById('dateText')
+    
+    if (getParam('date')) 
+        dateText.innerText = calendar.dateToString(calendar.setSelected(getParam('date')), '/')
+    else
+        dateText.innerText = calendar.dateToString(calendar.selected, '/')
+    calendar.draw(calendarHtml)
+    calendarPage.style.display = 'block'
+    
 
     let btnPrev = document.getElementById('btnPrev')
     btnPrev.addEventListener('click', function() {
@@ -26,5 +71,37 @@ window.addEventListener('DOMContentLoaded', function() {
     btnNext.addEventListener('click', function() {
         dateText.innerText = calendar.dateToString(calendar.nextMonth(), '/')
     })
-  
+
+    let btnNew = document.getElementById('btnNew')
+    btnNew.addEventListener('click', function() {
+        document.pageTransition(calendarPage, eventManagerPage)
+    })
+
+    /* ------------------------------ EVENT MANAGER ----------------------------- */
+    let btnAddEvent = document.getElementById('btnAddEvent')
+    btnAddEvent.addEventListener('click', function(event) {
+        event.preventDefault()
+        let title = document.getElementsByName('title')[0].value
+        let description = document.getElementsByName('description')[0].value
+        let color = document.getElementsByName('color')[0].value
+        let date = document.getElementsByName('date')[0].value
+        let dateObj = new Date()
+        
+        date.split('-').forEach((item, index) => {
+            if (index == 0) dateObj.setFullYear(parseInt(item))
+            if (index == 1) dateObj.setMonth(parseInt(item))
+            if (index == 2) dateObj.setDate(parseInt(item))
+        })
+        
+        let eventObj = {
+            title,
+            description,
+            color,
+            date: dateObj
+        }
+
+        calendar.addEvent(eventObj)
+        document.pageTransition(eventManagerPage, calendarPage)
+    });
+
 })

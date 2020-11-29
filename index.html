@@ -10,13 +10,52 @@
 <body>
     <div id="wrapper">
         <div class="aside"></div>
-        <div class="controller">
-            <div id="btnPrev">PREV</div>
-            <div id="dateText">28/11/2020</div>
-            <div id="btnNext">NEXT</div>
-        </div>
-        <div id="calendar" class="calendar">
+        <div id="calendar-page" class="page">
+            <div class="controller">
+                <div id="btnPrev" class="icon chevron-left"></div>
+                <div id="dateText"></div>
+                <div id="btnNext" class="icon chevron-right"></div>
+                <div id="btnNew" class="btn btn-info">Nuevo Evento</div>
+            </div>
+            <div id="calendar" class="calendar">
 
+            </div>
+        </div>
+        <div id="event-manager-page" class="page">
+            <div id="align">
+                <form id="event-manager">
+                    <div class="form-wrapper">
+                        <div class="form-title">
+                            <h2 class="text-center">Nuevo evento</h2>
+                        </div>
+                        
+                        <label>Titulo</label>
+                        <input type="text" name="title">
+
+                    
+                        <label>Descripción</label>
+                        <textarea name="description"></textarea>
+
+                        <label>Fecha</label>
+                        <input type="date" name="date">
+                
+                        <label>Color</label>
+                        <select name="color" id="color">
+                            <option value="random" selected>Random</option>
+                            <option value="blue">Azul</option>
+                            <option value="green">Vede</option>
+                            <option value="red">Rojo</option>
+                            <option value="orange">Naranja</option>
+                            <option value="yellow">Amarillo</option>
+                            <option value="black">Negro</option>
+                            <option value="purple">Violeta</option>
+                        </select>
+                    
+                        <input id="btnAddEvent" class="btn btn-success" type="submit" value="Añadir" />
+                   
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 
