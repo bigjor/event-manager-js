@@ -1,5 +1,7 @@
 import events from './tables/events.js'
 
+/* ---------------------- REF 4 | Variables let i const --------------------- */
+
 const VERSION = 1
 const TABLES = {
   EVENTS: {

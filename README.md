@@ -1,17 +1,25 @@
 # event-manager-js
 
-# This project requires node installed
+### This project requires node installed
 ```
 sudo apt install nodejs
 sudo apt install npm
 ```
 
-## Project setup
+## Project server setup
 ```
+cd server
 npm install
 ```
 
-### Compiles for development
+## Server Compiles for development
 ```
+cd server
 npm start
+```
+
+
+## Client needs server to run
+```
+Install Xampp or GoLive extension on VS-Code
 ```

@@ -1,29 +1,32 @@
-REF 1 | Objectes ✓
-REF 2 | Classes ✓
-REF 3 | Herència ✓
-REF 4 | Variables let i const ✓
-REF 5 | Arrays ✓
-REF 6 | Iterables ✓
-REF 7 | Funcions ✓
-REF 8 | Declaració de funció ✓
-REF 9 | Expressió de funció [DETERMINAR function*]
-REF 10 | Funcions autoinvocades ✓
-REF 11 | Funcions fletxa ✓
-REF 12 | Template literals ✓
-REF 13 | Objectes predefinits
-REF 14 | Selectors ✓
-REF 15 | Modificar el nodes ✓
+Busca REF X en el codigo del proyecto y encontraras, partes
+donde se haya usado la caracteristica
+
+REF 1 ✓ | Objectes ✓
+REF 2 ✓ | Classes ✓
+REF 3 ✓ | Herència ✓
+REF 4 ✓ | Variables let i const ✓
+REF 5 ✓ | Arrays ✓
+REF 6 ✓ | Iterables ✓
+REF 7 ✓ | Funcions ✓
+REF 8 ✓ | Declaració de funció ✓
+REF 9 | Expressió de funció [DETERMINAR function*]??
+REF 10 ✓ | Funcions autoinvocades ✓
+REF 11 ✓ | Funcions fletxa ✓
+REF 12 ✓ | Template literals ✓
+REF 13 ✓ | Objectes predefinits
+REF 14 ✓ | Selectors ✓
+REF 15 ✓ | Modificar el nodes ✓
 REF 16 | Validació de formularis ✓
-REF 17 | Formularis reactius
-REF 18 | Destructuring 
-REF 19 | Closure ✓
-REF 20 | Registre d'events W3C ✓
-REF 21 | use strict ✓
-REF 22 | XMLhttpRequest ✓
+REF 17 ✓ | Formularis reactius
+REF 18 ✓ | Destructuring ✓
+REF 19 ✓ | Closure ✓
+REF 20 ✓ | Registre d'events W3C ✓
+REF 21 ✓ | use strict ✓
+REF 22 ✓ | XMLhttpRequest ✓
 REF 23 | fetch X
-REF 24 | formData
-REF 25 | API REST ✓
-REF 26 | Promises ✓
-REF 27 | JSON ✓
-REF 28 | Cookies i LocalStorage ✓
-REF 29 | Mòduls ✓
+REF 24 | formData X
+REF 25 ✓ | API REST ✓
+REF 26 ✓ | Promises ✓
+REF 27 ✓ | JSON ✓
+REF 28 ✓ | Cookies i LocalStorage ✓
+REF 29 ✓ | Mòduls ✓

@@ -1,3 +1,5 @@
+/* ------------------------- REF 22 | XMLhttpRequest ------------------------ */
+/* ---------------------------- REF 25 | API REST --------------------------- */
 class API {
     constructor(baseURL, withCredentials, headers) {
         this.baseURL = baseURL
@@ -6,6 +8,7 @@ class API {
         this.request.withCredentials = withCredentials || false
     }
 
+    /* ---------------------------- REF 1 | Objectes ---------------------------- */
     create(opts) {
         let baseURL = opts.baseURL || 'http://localhost'
         let headers = opts.headers || {}
@@ -38,6 +41,8 @@ class API {
         for (const header in this.headers) {
             this.request.setRequestHeader(header, this.headers[header])    
         }
+
+        /* ---------------------------- REF 26 | Promises --------------------------- */
         let promise = new Promise((resolve, reject) => {
             this.request.onreadystatechange = function (event) {
                 if (event.target.readyState == 4) 

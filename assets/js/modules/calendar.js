@@ -1,9 +1,13 @@
+/* ----------------------------- REF 2 | Classes ---------------------------- */
+
 class ItemEvent {
     constructor(title, date) {
         this.title = title
         this.date = date
     }
 }
+
+/* ---------------------------- REF 3 | Herència ---------------------------- */
 
 class CustomItemEvent extends ItemEvent {
     constructor(title, description, date, color) {
@@ -28,6 +32,7 @@ class Calendar {
         this.target = undefined
         this.current = this.today
         this.selected = this.current
+        this.eventSelected = null
     }
 
     firstDayOfWeek(month, year) {
@@ -54,6 +59,7 @@ class Calendar {
         let month = this.selected.getMonth() + 1
         
         // DRAW DAY BOX
+        /* ----------------------- REF 15 | Modificar el nodes ---------------------- */
         for (let day = 1; day <= this.daysInMonth(month, year); day++) {
             let date = new Date(year, month - 1, day)
             let container = document.createElement('div')
@@ -68,15 +74,20 @@ class Calendar {
             container.className = 'item-day'
             container.appendChild(number)
     
+            /* ---------------------------- REF 6 | Iterables --------------------------- */
             for(let ev of this.events) {
                 if (!this.isSameDate(date, ev.object.date)) continue;
                 let divEvent = document.createElement('div')
                 divEvent.className = 'event'
                 divEvent.style.background = ev.object.color
                 divEvent.innerText = ev.object.title
+                divEvent.addEventListener('click', () => {
+                    window.app.eventReactive.event = ev
+                })
                 container.appendChild(divEvent)
             }
-    
+
+            /* ------------------------ REF 11 | Funcions fletxa ------------------------ */
             container.addEventListener('click', () => {
                 this.selected = new Date(year, month - 1, day)
                 Object.values(container.parentElement.children).forEach(item => {
@@ -109,7 +120,8 @@ class Calendar {
             year = currentYear
             month = currentMonth + 1
         }
-    
+
+        /* ---------------------- REF 13 | Objectes predefinits --------------------- */
         this.selected = new Date(year, month, 1)
         this.draw()
 
@@ -134,11 +146,14 @@ class Calendar {
         this.draw()
         return this.selected
     }
-    
-    dateToString(date, delimiter = '-') {
+
+    /* ---------------------- REF 12 | Template literals ---------------------- */
+    dateToString(date, delimiter = '-', reverse = false) {
         if (!date) return ''
         let day = date.getDate();
         let month = date.getMonth() + 1;
+        if (reverse)
+            return `${date.getFullYear()}${delimiter}${month < 10 ? '0' + month : month}${delimiter}${day < 10 ? '0' + day : day}`
         return `${day < 10 ? '0' + day : day}${delimiter}${month < 10 ? '0' + month : month}${delimiter}${date.getFullYear()}`
     }
 
@@ -151,13 +166,26 @@ class Calendar {
     }
 
     addEvent(event) {
+
+        /* ------------------------- REF 18 | Destructuring ------------------------- */
         let { title, description, date, color } = event
 
         color = color == 'random' ? this.randomColor() : color 
         
         let newEvent = new CustomItemEvent(title, description, date, color)
         
-        window.localdb.createEvent(this.uuidv4(), event)
+        window.localdb.createEvent(this.uuidv4(), newEvent)
+        this.updateEvents()
+    }
+
+    editEvent(id, event) {
+
+        let { title, description, date, color } = event
+        color = color == 'random' ? this.randomColor() : color 
+        
+        let modifiedEvent = new CustomItemEvent(title, description, date, color)
+        
+        window.localdb.createEvent(id, modifiedEvent)
         this.updateEvents()
     }
 

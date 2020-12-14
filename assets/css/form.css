@@ -60,3 +60,7 @@ input:focus {
     color: #cc0000;
     font-size: small;
 }
+
+.hidden {
+    display: none;
+}

@@ -25,6 +25,7 @@ export function deleteCookie(name) {
     document.cookie = name +'=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;';
 }
 
+/* ---------------------- REF 8 | Declaració de funció ---------------------- */
 export function getParam(param) {
     let result = null, entry = []
     location.search

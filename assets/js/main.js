@@ -1,3 +1,5 @@
+/* ----------------------------- REF 29 | Mòduls ---------------------------- */
+
 // COMPONENTS
 import calendar from './modules/calendar.js'
 
@@ -11,15 +13,21 @@ import { getParam, setCookie, getCookie, deleteCookie } from './utils/utils.js'
 // TESTS
 import { apiTestExec } from './test/TestAPI.js'
 
+/* --------------------- REF 10 | Funcions autoinvocades -------------------- */
 (function() {
+
+    /* --------------------------- REF 21 | use strict -------------------------- */
     'use strict';
 
     // GENERAL VARS
     window.test = arguments[1].test || false
     window.production = arguments[1].production || false
     window.name = arguments[0]
+    window.app = {}
 
     // GENERAL FUNCTIONS
+
+    /* ---------------------------- REF 7 | Funcions ---------------------------- */
     window.log = (text, ...args) => {
         let privileges = typeof args[args.length - 1] == 'boolean' ? args[args.length - 1] : false
         let opts = `color: #fff;
@@ -31,16 +39,20 @@ import { apiTestExec } from './test/TestAPI.js'
 
     document.pageTransition = (oldPage, newPage) => {
         oldPage.style.opacity = 0
+        oldPage.active = false
         setTimeout(() => {
             oldPage.style.display = 'none'
             newPage.style.display = 'block'
             newPage.style.opacity = 100
+            newPage.active = true
         }, 200)
     }
 
     /* -------------------------------------------------------------------------- */
     /*                                 INICIO APP                                 */
     /* -------------------------------------------------------------------------- */
+
+    /* --------------------- REF 20 | Registre d'events W3C --------------------- */
     window.addEventListener('DOMContentLoaded', function() {
         window.log(window.name || 'UNNAMED', 'orange', '.2em .6em', true)
         window.log('DOM LOADED', 'gray')
@@ -69,11 +81,14 @@ import { apiTestExec } from './test/TestAPI.js'
         else
             loginPage.style.display = 'block'
 
+        /* --------------------------- REF 14 | Selectors --------------------------- */
         let userInput = document.getElementsByName('user')[0]
         let passInput = document.getElementsByName('pass')[0]
 
         let btnLogin = document.getElementById('btnLogin')
         btnLogin.addEventListener('click', async function(event) {
+
+            /* ---------------------------- REF 19 | Closure ---------------------------- */
             async function check() {
                 let errors = []
                 if (userInput.value.length < 1) {
@@ -93,12 +108,20 @@ import { apiTestExec } from './test/TestAPI.js'
                         'Accept': '*/*'
                     }
                 })
-                let result = await API.post('/login', JSON.stringify({ user: userInput.value, pass: passInput.value}))
+
+                /* ------------------------------ REF 27 | JSON ----------------------------- */
+                let data = { user: userInput.value, pass: passInput.value }
+                // NOT WORKING
+                // let data = new FormData()
+                // data.append('user', userInput.value)
+                // data.append('pass', passInput.value)
+                let result = await API.post('/login', JSON.stringify(data))
                 console.log(result)
                 if (!JSON.parse(result).logged) errors.push('Usuario o contraseña incorrectas')
                 return errors  
             }
 
+            /* ----------------------------- REF 5 | Arrays ----------------------------- */
             function drawErrors(errors = [], target) {
                 if (!target) return
                 console.log(errors)
@@ -113,6 +136,8 @@ import { apiTestExec } from './test/TestAPI.js'
             loginPageErrors.innerHTML = ''
             event.preventDefault()
             let errors = await check()
+
+            /* --------------------- REF 28 | Cookies i LocalStorage -------------------- */
             if (errors.length == 0) {
                 setCookie('user', userInput.value, 1)
                 document.pageTransition(loginPage, calendarPage)
@@ -150,6 +175,11 @@ import { apiTestExec } from './test/TestAPI.js'
         let btnNew = document.getElementById('btnNew')
         btnNew.addEventListener('click', function() {
             document.pageTransition(calendarPage, eventManagerPage)
+            document.querySelectorAll('.form-title h2').forEach(node => {
+                if (eventManagerPage.contains(node)) {
+                    node.textContent = 'Nuevo evento'
+                }
+            })
         })
 
         let btnExit = document.getElementById('btnExit')
@@ -162,10 +192,38 @@ import { apiTestExec } from './test/TestAPI.js'
         let btnAddEvent = document.getElementById('btnAddEvent')
         btnAddEvent.addEventListener('click', function(event) {
             event.preventDefault()
-            let title = document.getElementsByName('title')[0].value
-            let description = document.getElementsByName('description')[0].value
-            let color = document.getElementsByName('color')[0].value
-            let date = document.getElementsByName('date')[0].value
+
+            if (eventReactive.event != null) {
+                if (typeof eventReactive.event.object.date == 'string') {
+                    let year = 0
+                    let month = 0
+                    let day = 0
+    
+                    eventReactive.event.object.date.split('-').forEach((item, index) => {
+                        if (index == 0) year = parseInt(item)
+                        if (index == 1) month = parseInt(item)
+                        if (index == 2) day = parseInt(item)
+                    })
+                    
+                    let dateObj = new Date(year, month - 1, day)
+                    eventReactive.event.object.date = dateObj
+                }
+
+                calendar.editEvent(eventReactive.event.id, eventReactive.event.object)
+                
+                eventReactive.event = null
+                removeListeners();
+                document.pageTransition(eventManagerPage, calendarPage)
+                return;
+            }
+
+
+            let form = document.querySelector('form#event-manager')
+            let id = form[0].value
+            let title = form[1].value
+            let description = form[2].value
+            let date = form[3].value
+            let color = form[4].value
             
             
             let year = 0
@@ -192,6 +250,60 @@ import { apiTestExec } from './test/TestAPI.js'
             document.pageTransition(eventManagerPage, calendarPage)
         });
 
+        /* ---------------------- REF 17 | Formularis reactius ---------------------- */
+        var eventReactive = {
+            eventInternal: null,
+            eventListener: function(val) {},
+            set event(val) {
+              this.eventInternal = val
+              this.eventListener(val)
+            },
+            get event() {
+              return this.eventInternal
+            },
+            registerListener: function(listener) {
+              this.eventListener = listener
+            }
+        }
+    
+        eventReactive.registerListener(function(val) {
+            if (eventManagerPage.active != true) {
+                document.pageTransition(calendarPage, eventManagerPage)
+                
+                document.querySelectorAll('.form-title h2').forEach(node => {
+                    if (eventManagerPage.contains(node)) {
+                        node.textContent = 'Editar evento'
+                    }
+                })
+
+                let form = document.querySelector('form#event-manager')
+                for (let field of form) {
+                    let prop = field.name
+                    if (field.name == prop) {
+                        if (field.type == 'date')
+                            field.value = calendar.dateToString(eventReactive.event.object[prop], '-', true)
+                        if (field.type == 'text' || field.type == 'select')
+                            field.value = eventReactive.event.object[prop]
+                    }
+                    field.addEventListener('change', (value) => {
+                        eventReactive.event.object[prop] = value.target.value
+                    })
+                }
+            }
+        });
+
+        function removeListeners() {
+            let form = document.querySelector('form#event-manager')
+            for (let field of form) 
+                field.removeEventListener('change', null, false)
+        }
+    
+        window.app.eventReactive = eventReactive
+        
     })
+
+
+    
+    
 
 })('EVENTS APP | JORDAN', { test: false, production: false })
